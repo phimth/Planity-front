@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import mails from './providers.json'
 import './App.css';
+import * as EmailValidator from 'email-validator';
 
 function App (){
   const [name, setName] = useState("")
@@ -16,12 +17,16 @@ function App (){
   }
 
   useEffect(()=>{ //affichage mails suggérés
-    if(!(name.includes("@"))){
+    if(EmailValidator.validate(name)){
+      setDisplay([])
+    }else if(!(name.includes("@"))){
       setDisplay(mails.slice(0,3))
+
     }else{
       const regex = '@(.*)'
       const match = name.match(regex)[1]
       const newMails = mails.filter(mail=>mail.includes(match))
+
       if(newMails.length<=3){
         setDisplay(newMails)
       }else{
