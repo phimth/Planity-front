@@ -5,26 +5,46 @@ import './App.css';
 function App (){
   const [name, setName] = useState("")
 
-  const [display, setDisplay] = useState(mails)
+  const [display, setDisplay] = useState(mails.slice(0,3))
 
-  const change = (e) =>{
-    console.log(e)
+  const change = (e) =>{ //handle name
     setName(e)
   }
-  useEffect(()=>{
-    if(name.includes("@"))console.log('@')
+
+  const complete = (mail) =>{ //complétion mail
+    console.log(mail)
+  }
+
+  useEffect(()=>{ //affichage mails suggérés
+    if(!(name.includes("@"))){
+      setDisplay(mails.slice(0,3))
+    }else{
+      const regex = '@(.*)'
+      const match = name.match(regex)[1]
+      const newMails = mails.filter(mail=>mail.includes(match))
+      if(newMails.length<=3){
+        setDisplay(newMails)
+      }else{
+        setDisplay(newMails.slice(0,3))
+      }
+    }
   },[name])
 
   return(
     <div className="flexbox-container">
     <input 
+      style={{"margin":10,"padding":5}}
       type="text"
       value={name}
       onChange={e=>change(e.target.value)}
       >
     </input>
     {display.map((mail)=>{return(
-      <p key={mail} style={{"padding":5}}>
+      <p 
+        onClick={()=>complete(mail)} 
+        key={mail} 
+        style={{"paddingLeft":5,"paddingRight":5}}
+      >
         {mail}
       </p>
       )
