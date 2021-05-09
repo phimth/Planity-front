@@ -6,7 +6,7 @@ import * as EmailValidator from 'email-validator';
 function App (){
   const [name, setName] = useState("")
   const [display, setDisplay] = useState(mails.slice(0,3))
-  const regex = '([a-z0-9._-]+@)(.*)'
+  const regex = '([a-z0-9._-]+)@?(.*)'
   const match = name.match(regex)
 
   const change = (e) =>{ //handle name
@@ -14,7 +14,7 @@ function App (){
   }
 
   const complete = (mail) =>{ //complétion mail
-    setName(match[1]+mail)
+    setName(match[1]+"@"+mail)
   }
 
   useEffect(()=>{ //affichage mails suggérés
@@ -37,6 +37,7 @@ function App (){
   return(
     <div className="flexbox-container">
     <input 
+      autoFocus
       style={{"margin":10,"padding":5}}
       type="text"
       value={name}
