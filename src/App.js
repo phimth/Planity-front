@@ -5,15 +5,16 @@ import * as EmailValidator from 'email-validator';
 
 function App (){
   const [name, setName] = useState("")
-
   const [display, setDisplay] = useState(mails.slice(0,3))
+  const regex = '([a-z0-9._-]+@)(.*)'
+  const match = name.match(regex)
 
   const change = (e) =>{ //handle name
     setName(e)
   }
 
   const complete = (mail) =>{ //complétion mail
-    console.log(mail)
+    setName(match[1]+mail)
   }
 
   useEffect(()=>{ //affichage mails suggérés
@@ -23,9 +24,7 @@ function App (){
       setDisplay(mails.slice(0,3))
 
     }else{
-      const regex = '@(.*)'
-      const match = name.match(regex)[1]
-      const newMails = mails.filter(mail=>mail.includes(match))
+      const newMails = mails.filter(mail=>mail.includes(match[2]))
 
       if(newMails.length<=3){
         setDisplay(newMails)
