@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState,useEffect,useRef} from 'react'
 import mails from './providers.json'
 import './App.css';
 import * as EmailValidator from 'email-validator';
@@ -6,6 +6,7 @@ import * as EmailValidator from 'email-validator';
 function App (){
   const [name, setName] = useState("")
   const [display, setDisplay] = useState(mails.slice(0,3))
+  const emailInputRef = React.useRef(null);
   const regex = '([a-z0-9._-]+)@?(.*)'
   const match = name.match(regex)
 
@@ -14,10 +15,13 @@ function App (){
   }
 
   const complete = (mail) =>{ //complétion mail
-    setName(match[1]+"@"+mail)
+    if(name.length>1) setName(match[1]+"@"+mail)
+    emailInputRef.current.focus();
   }
 
   useEffect(()=>{ //affichage mails suggérés
+    emailInputRef.current.focus()
+
     if(EmailValidator.validate(name)){
       setDisplay([])
     }else if(!(name.includes("@"))){
@@ -33,11 +37,11 @@ function App (){
       }
     }
   },[name])
-
+  
   return(
     <div className="flexbox-container">
     <input 
-      autoFocus
+      ref={emailInputRef}
       style={{"margin":10,"padding":5}}
       type="text"
       value={name}
